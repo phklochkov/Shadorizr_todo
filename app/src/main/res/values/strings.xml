@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Shadorizr_todo</string>
+    <string name="app_title">TODO App</string>
+    <string name="add_todo">Add</string>
+</resources>
