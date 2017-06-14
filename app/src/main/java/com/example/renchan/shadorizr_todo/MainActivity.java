@@ -1,15 +1,21 @@
 package com.example.renchan.shadorizr_todo;
 
 import android.app.Activity;
+import android.app.LauncherActivity;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by renchan on 05.06.17.
@@ -23,9 +29,23 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-        ListView listView = (ListView) findViewById(R.id.listView);
+        final ListView listView = (ListView) findViewById(R.id.listView);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView item = ((TextView) listView
+                        .getChildAt(position)
+                        .findViewById(android.R.id.text1));
+                if (item.getPaintFlags() == Paint.STRIKE_THRU_TEXT_FLAG) {
+                    item.setPaintFlags(0);
+                    return;
+                }
+
+                item.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+        });
         addKeyboardHandler();
     }
 
