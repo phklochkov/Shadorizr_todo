@@ -35,15 +35,7 @@ public class MainActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView item = ((TextView) listView
-                        .getChildAt(position)
-                        .findViewById(android.R.id.text1));
-                if (item.getPaintFlags() == Paint.STRIKE_THRU_TEXT_FLAG) {
-                    item.setPaintFlags(0);
-                    return;
-                }
-
-                item.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                addListItemHandler(view, position);
             }
         });
         addKeyboardHandler();
@@ -66,6 +58,17 @@ public class MainActivity extends Activity {
                 return false;
             }
         });
+
+    }
+
+    private void addListItemHandler(View view, int position) {
+        TextView item = (TextView) view.findViewById(android.R.id.text1);
+        if (item.getPaintFlags() == Paint.STRIKE_THRU_TEXT_FLAG) {
+            item.setPaintFlags(0);
+            return;
+        }
+
+        item.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
     }
 
