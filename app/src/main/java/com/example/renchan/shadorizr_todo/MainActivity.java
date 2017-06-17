@@ -1,11 +1,9 @@
 package com.example.renchan.shadorizr_todo;
 
 import android.app.Activity;
-import android.app.LauncherActivity;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,14 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by renchan on 05.06.17.
  */
 
 public class MainActivity extends Activity {
-    private final ArrayList<String> list = new ArrayList<>();
+    private ArrayList<String> list = new ArrayList<>();
     private ArrayAdapter<String> adapter;
 
     @Override
@@ -30,12 +27,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
         final ListView listView = (ListView) findViewById(R.id.listView);
+        if (savedInstanceState != null) {
+            list = savedInstanceState.getStringArrayList("todoList");
+        }
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                addListItemHandler(view, position);
+                addListItemHandler(view);
             }
         });
         addKeyboardHandler();
@@ -43,6 +43,12 @@ public class MainActivity extends Activity {
 
     public void onAddTodo(View view) {
         addTodo();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putStringArrayList("todoList", list);
+        super.onSaveInstanceState(outState);
     }
 
     private void addKeyboardHandler() {
@@ -61,7 +67,7 @@ public class MainActivity extends Activity {
 
     }
 
-    private void addListItemHandler(View view, int position) {
+    private void addListItemHandler(View view) {
         TextView item = (TextView) view.findViewById(android.R.id.text1);
         if (item.getPaintFlags() == Paint.STRIKE_THRU_TEXT_FLAG) {
             item.setPaintFlags(0);
@@ -74,7 +80,12 @@ public class MainActivity extends Activity {
 
     private void addTodo() {
         Editable text = ((EditText) findViewById(R.id.editText)).getText();
-        list.add(text.toString());
+        String todo = text.toString();
+        if (todo.isEmpty()) {
+            return;
+        }
+
+        list.add(todo);
         text.clear();
         adapter.notifyDataSetChanged();
     }
